@@ -8,13 +8,13 @@ import org.quartz.JobExecutionException;
 /**
  * @Author: 高铁墩
  * @Description:
- * @Date: Create in 10:06 2018/12/25
+ * @Date: Create in 20:56 2018/12/25
  */
-public class MyTestJob implements Job {
-
+public class JobWithDataMap implements Job {
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-
-        System.out.println("执行我的测试方法");
+        JobDataMap jobDataMap = jobExecutionContext.getMergedJobDataMap();
+        String name = jobDataMap.get("name").toString();
+        System.out.println("执行包含参数的任务，参数name:"+name);
     }
 }

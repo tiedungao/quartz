@@ -4,10 +4,14 @@ import com.spring.quartz.service.QuartzService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.quartz.JobDataMap;
 import org.quartz.JobKey;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @Author: 高铁墩
@@ -26,7 +30,7 @@ public class QuartzServiceImplTest {
      */
     @Test
     public void addJob() {
-        quartzService.addJob("job1", com.spring.quartz.job.MyTestJob.class,"/15 * * * * ? *");
+        quartzService.addJob("myTestJob", com.spring.quartz.job.MyTestJob.class,"/15 * * * * ? *");
     }
 
     /**
@@ -34,7 +38,9 @@ public class QuartzServiceImplTest {
      */
     @Test
     public void addJobAndData() {
-
+        JobDataMap jobDataMap = new JobDataMap();
+        jobDataMap.put("name","hello Siri");
+        quartzService.addJobAndData("jobWithDataMap",com.spring.quartz.job.JobWithDataMap.class,"/15 * * * * ? *,",jobDataMap);
     }
 
     /**

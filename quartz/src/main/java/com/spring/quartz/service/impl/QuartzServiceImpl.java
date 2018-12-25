@@ -24,8 +24,6 @@ public class QuartzServiceImpl implements QuartzService {
     public static final String DEFAULT_JOB_GROUP_NAME = "defaultJobGroup";
     //默认触发器组名称
     public static final String DEFAULT_TRIGGER_GROUP_NAME = "defaultTriggerGroup";
-    //默认触发器名称
-    public static final String DEFAULT_TRIGGER_NAME = "defaultTriggerName";
 
     private static Scheduler scheduler = SchedulerUtils.getScheduler();
 
@@ -43,6 +41,7 @@ public class QuartzServiceImpl implements QuartzService {
                 .build();
 
         try {
+            //根据jobDetail和cronTrigger创建任务
             scheduler.scheduleJob(jobDetail,cronTrigger);
         } catch (SchedulerException e) {
             e.printStackTrace();
@@ -51,22 +50,19 @@ public class QuartzServiceImpl implements QuartzService {
 
     }
 
-    public void addJobAndData(String jobName,Class<? extends Job> cls,String cronExpression, Object dataObj){
-
-        JobDataMap jobDataMap = new JobDataMap();
-        jobDataMap.put(jobName,dataObj);
+    public void addJobAndData(String jobName,Class<? extends Job> cls,String cronExpression, JobDataMap jobDataMap){
 
         //定义JobDetail
         JobDetail jobDetail = newJob(cls).requestRecovery(true)
-                .setJobData(jobDataMap)
+                .usingJobData(jobDataMap)
                 .withIdentity(jobName,DEFAULT_JOB_GROUP_NAME)
                 .build();
 
         //定义Trigger
-        Trigger cronTrigger = newTrigger().withIdentity(DEFAULT_TRIGGER_NAME,DEFAULT_TRIGGER_GROUP_NAME)
+        Trigger cronTrigger = newTrigger().withIdentity(jobName+"Trigger",DEFAULT_TRIGGER_GROUP_NAME)
                 .startNow()
                 .withSchedule(cronSchedule(cronExpression)
-                        .withMisfireHandlingInstructionFireAndProceed())
+                .withMisfireHandlingInstructionFireAndProceed())
                 .forJob(jobDetail)
                 .build();
 

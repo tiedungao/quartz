@@ -17,7 +17,7 @@ public interface QuartzService {
     public void addJob(String jobName, Class<? extends Job> cls, String cronExpression);
 
 
-    public void addJobAndData(String jobName,Class<? extends Job> cls,String cronExpression, Object dataObj);
+    public void addJobAndData(String jobName,Class<? extends Job> cls,String cronExpression, JobDataMap jobDataMap);
 
     public void pauseJob(String jobName,String triggerGroupName);
 
